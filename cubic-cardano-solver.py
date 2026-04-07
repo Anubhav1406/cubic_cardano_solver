@@ -65,6 +65,7 @@ def solve_cubic(a, b, c, d, tol=mp.mpf('1e-12')):
         for k in range(3)
     ]
 
+    # Rephining roots using Newton-Raphson
     f = lambda x: a*x**3 + b*x**2 + c*x + d
     df = lambda x: 3*a*x**2 + 2*b*x + c
     for _ in range(2):
