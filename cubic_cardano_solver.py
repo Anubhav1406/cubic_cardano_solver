@@ -59,7 +59,7 @@ def solve_cubic(a, b, c, d, tol=mp.mpf('1e-12')):
     # Match correct pairs
     idx = 0
     for i in range(3):
-        if abs(alpha[0] * beta[i] - A/3) < tol*scale:
+        if abs(alpha[0] * beta[i] - A/3) < tol:
             idx = i
             break
 
@@ -73,7 +73,7 @@ def solve_cubic(a, b, c, d, tol=mp.mpf('1e-12')):
     df = lambda x: 3*a*x**2 + 2*b*x + c
     for _ in range(2):
         for i in range(len(roots)):
-            if abs(df(roots[i])) < tol*scale:
+            if abs(df(roots[i])) < tol:
                 continue
             roots[i] = roots[i] - f(roots[i])/df(roots[i])
 
