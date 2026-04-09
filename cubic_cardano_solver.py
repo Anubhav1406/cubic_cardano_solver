@@ -29,6 +29,9 @@ def solve_cubic(a, b, c, d, tol=mp.mpf('1e-12')):
     # Convert to mpmath complex
     a, b, c, d = mp.mpc(a), mp.mpc(b), mp.mpc(c), mp.mpc(d)
 
+    #Define scale
+    scale = max(abs(a), abs(b), abs(c), abs(d))
+
     # Depressed cubic coefficients
     A = (1/3)*(b/a)**2 - c/a
     B = b*c/(3*a**2) - d/a - (2/27)*(b/a)**3
@@ -56,7 +59,7 @@ def solve_cubic(a, b, c, d, tol=mp.mpf('1e-12')):
     # Match correct pairs
     idx = 0
     for i in range(3):
-        if abs(alpha[0] * beta[i] - A/3) < tol:
+        if abs(alpha[0] * beta[i] - A/3) < tol*scale:
             idx = i
             break
 
@@ -70,7 +73,7 @@ def solve_cubic(a, b, c, d, tol=mp.mpf('1e-12')):
     df = lambda x: 3*a*x**2 + 2*b*x + c
     for _ in range(2):
         for i in range(len(roots)):
-            if(df(roots[i]) == 0):
+            if abs(df(roots[i])) < tol*scale:
                 continue
             roots[i] = roots[i] - f(roots[i])/df(roots[i])
 
