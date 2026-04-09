@@ -29,9 +29,6 @@ def solve_cubic(a, b, c, d, tol=mp.mpf('1e-12')):
     # Convert to mpmath complex
     a, b, c, d = mp.mpc(a), mp.mpc(b), mp.mpc(c), mp.mpc(d)
 
-    #Define scale
-    scale = max(abs(a), abs(b), abs(c), abs(d))
-
     # Depressed cubic coefficients
     A = (1/3)*(b/a)**2 - c/a
     B = b*c/(3*a**2) - d/a - (2/27)*(b/a)**3
