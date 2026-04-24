@@ -2,7 +2,7 @@
 
 This project implements a complete solver for cubic equations using **Cardano’s method**, extended to handle **complex coefficients** and **high-precision arithmetic**.
 
-Unlike typical implementations that rely on libraries or numerical approximations, this approach reconstructs the solution **from first principles**, including proper handling of complex cube roots and branch selection.
+Unlike typical implementations that rely on libraries or numerical approximations, this approach reconstructs the solution **from first principles**, including proper handling of complex cube roots, branch selection, and numerical refinement.
 
 ---
 
@@ -33,13 +33,16 @@ which reduces the problem to solving a quadratic in terms of α³ and β³.
 ### Steps:
 
 1. **Normalize equation**
-   - Divide by `a`
+
+   * Divide by `a`
 
 2. **Eliminate quadratic term**
-   - Use substitution: `x = μ - b/(3a)`
+
+   * Use substitution: `x = μ - b/(3a)`
 
 3. **Reduce to depressed cubic**
-   - μ³ = Aμ + B
+
+   * μ³ = Aμ + B
 
 4. Substitute μ = α + β
 
@@ -56,53 +59,103 @@ which reduces the problem to solving a quadratic in terms of α³ and β³.
    α³ + β³ = B
 
 5. **Solve quadratic**
-   - u² - Bu + A³/27 = 0
+
+   * u² - Bu + A³/27 = 0
 
 6. **Compute cube roots (complex)**
-   - Convert to polar form
-   - Generate all cube roots
+
+   * Convert to polar form
+   * Generate all cube roots
 
 7. **Match valid root pairs**
-   - Ensure αβ = A/3
+
+   * Ensure αβ = A/3
 
 8. **Recover roots**
-   - x = α + β - b/(3a)
+
+   * x = α + β - b/(3a)
+
+9. **Newton refinement (2 iterations)**
+
+   * Improve numerical accuracy of computed roots
 
 ---
 
 ## 🚀 Features
 
-- Handles **complex coefficients**
-- Uses **high-precision arithmetic (mpmath)**
-- Correctly resolves **multi-valued cube roots**
-- Implements **root pairing logic** for valid solutions
-- Includes **residual verification**
-- Fully derived and explained in notebook
+* Handles **complex coefficients**
+* Uses **high-precision arithmetic (mpmath)**
+* Correctly resolves **multi-valued cube roots**
+* Implements **root pairing logic** for valid solutions
+* Includes **Newton-based refinement**
+* Includes **automated residual verification across 50+ stress-tested cases**
+* Fully derived and explained in notebook
+
+---
+
+## 🧪 Testing & Validation
+
+To ensure correctness and numerical stability, the solver was evaluated using an automated test pipeline.
+
+### Test Setup
+
+* A file `Testcases.txt` stores multiple cubic equations (real and complex coefficients)
+* A script `test.py` feeds each testcase into the solver
+* Output is redirected and analyzed via:
+
+python test.py > output.txt
+
+### Output Format
+
+For each testcase:
+
+* Line 1: coefficients (a, b, c, d)
+* Next 3 lines: computed roots
+* Final line: residual errors
+  → |f(r₁)|, |f(r₂)|, |f(r₃)|
+
+---
+
+## 📊 Validation Results
+
+* Residual errors consistently observed in the range:
+
+  * ~10⁻⁵⁰ for high-precision cases
+  * ~10⁻¹⁷ near floating-point limits
+
+* Correct handling of:
+
+  * Repeated roots (with minimal imaginary artifacts)
+  * Ill-conditioned polynomials
+  * Large and small coefficient scales
+  * Complex-valued coefficients
+
+---
+
+## ⚠️ Numerical Notes
+
+* Small imaginary components (~1e-6 or lower) may appear for theoretically real roots due to floating-point and branch cut effects
+* Residual verification confirms correctness despite such artifacts
 
 ---
 
 ## 📊 Example Input
 
-```
 1 0 -1 1
-```
 
 or complex:
 
-```
 1+2j 0 -3 4j
-```
 
 ---
 
 ## 📌 Output
 
-- All three roots (real or complex)
-- Residual error for each root
+* All three roots (real or complex)
+* Residual error for each root
 
 Example:
 
-```
 Roots:
 r1 = 1.3247
 r2 = -0.6624 + 0.5623j
@@ -110,7 +163,6 @@ r3 = -0.6624 - 0.5623j
 
 Residuals |f(r)|:
 ~ 1e-50
-```
 
 ---
 
@@ -118,9 +170,9 @@ Residuals |f(r)|:
 
 The challenge in Cardano’s method is not solving the equation itself, but:
 
-- handling **complex cube roots**
-- selecting the correct **branch combinations**
-- maintaining **numerical stability**
+* handling **complex cube roots**
+* selecting the correct **branch combinations**
+* maintaining **numerical stability**
 
 A naive implementation often produces incorrect roots due to improper pairing.
 
@@ -128,26 +180,22 @@ A naive implementation often produces incorrect roots due to improper pairing.
 
 ## 🛠️ Requirements
 
-```
 pip install mpmath
-```
 
 ---
 
 ## ▶️ Run
 
-```
 python cubic_cardano_solver.py
-```
 
 ---
 
 ## 📁 Files
 
-```
-cubic_cardano_solver.py        → clean implementation  
-cubic_cardano_derivation.ipynb → full derivation and explanation  
-```
+cubic_cardano_solver.py        → clean implementation
+cubic_cardano_derivation.ipynb → full derivation and explanation
+test.py                        → automated testing pipeline
+Testcases.txt                  → input dataset for testing
 
 ---
 
@@ -155,9 +203,10 @@ cubic_cardano_derivation.ipynb → full derivation and explanation
 
 This project shows how:
 
-- A nonlinear cubic can be reduced to a **quadratic in disguise**
-- Algebraic manipulation leads directly to a **computational algorithm**
-- Classical mathematics can still outperform blind numerical methods when implemented carefully
+* A nonlinear cubic can be reduced to a **quadratic in disguise**
+* Algebraic manipulation leads directly to a **computational algorithm**
+* Classical mathematics can be combined with numerical refinement for high-precision results
+* Analytical solutions can be made computationally robust with careful implementation
 
 ---
 
@@ -167,4 +216,4 @@ This implementation focuses on understanding *why* the method works, not just ap
 
 Cardano’s formula is often presented as a final result, but its real power lies in the transformation process — reducing complexity step by step until the solution becomes accessible.
 
-This project attempts to reconstruct that journey.
+This project attempts to reconstruct that journey while ensuring practical numerical reliability.
